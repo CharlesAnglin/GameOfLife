@@ -1,6 +1,7 @@
 package gameOfLife
 
 import scala.collection.mutable.ListBuffer
+import scala.io.StdIn._
 
 class Board(val boardSize : (Int, Int)) {    //, seed : List[Boolean]
 
@@ -15,13 +16,50 @@ class Board(val boardSize : (Int, Int)) {    //, seed : List[Boolean]
     board += column
   }
 
-//  temporary seed
-  val r = scala.util.Random
-  for(a <- 0 to 5) {
-    var x = r.nextInt(boardSize._1)
-    var y =r.nextInt(boardSize._2)
-    board(x)(y).setNextState(true)
-    board(x)(y).nextGeneration
+  def seed : Unit = {
+    var random = readLine("Randomly generate cells? (y/n)")
+    random match {
+      case "y" => randomSeed
+      case "n" => userSeed
+      case _ => println("invalid input")
+        seed
+    }
+  }
+
+  def randomSeed = {
+    val r = scala.util.Random
+    val coverage = 0.4 * boardSize._1 * boardSize._2
+    for(a <- 1 to coverage.toInt) {
+      var x = r.nextInt(boardSize._1)
+      var y = r.nextInt(boardSize._2)
+      board(x)(y).setNextState(true)
+      board(x)(y).nextGeneration
+    }
+  }
+
+  def userSeed : Unit = {
+    val coords = ListBuffer[Tuple2[Int, Int]]()
+
+    println("Enter the coordinates of the cells you would like to generate")
+    println("0, 0 is the top left corner")
+    var userCoords = readLine("input in the form: int, int / int, int")
+    val pattern = """(\d+)""".r
+    var splitCoords = pattern.findAllIn(userCoords).toArray
+    try{
+      for(a <- 0 to splitCoords.size/2 -1){
+        var tup = (splitCoords(2*a).toInt, splitCoords(2*a+1).toInt)
+        coords += tup
+      }
+    } catch {
+      case _ : Exception =>
+        println("invalid input")
+        userSeed
+    }
+
+    for(elt <- coords){
+      board(elt._1)(elt._2).setNextState(true)
+      board(elt._1)(elt._2).nextGeneration
+    }
   }
 
   def getBoard = board
@@ -92,6 +130,5 @@ class Board(val boardSize : (Int, Int)) {    //, seed : List[Boolean]
       }
     }
   }
-
 
 }
