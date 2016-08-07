@@ -5,6 +5,9 @@ import scala.io.StdIn._
 object Game {
   def main(args: Array[String]): Unit = {
 
+    //code for a glider:
+    //2,0 0,1 2,1 1,2 2,2
+
     def selectBoard : Tuple2[Int, Int] = {
       var size = readLine("Select board size, input in the form: int, int")
       try {
@@ -23,8 +26,8 @@ object Game {
     val printer = new Printer
     board.seed
 
-    for(a <- 0 to 30){
-      Thread.sleep(2000)
+    for(a <- 0 to 100){
+      Thread.sleep(500)
       printer.print(board)
       board.nextGeneration
     }

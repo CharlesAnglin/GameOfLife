@@ -119,7 +119,7 @@ class Board(val boardSize : (Int, Int)) {    //, seed : List[Boolean]
         countCells((x,y)) match {
           case a if a < 2 => cell.setNextState(false)
           case a if a == 2 => cell.setNextState(cell.getCurrentState)
-          case a if a == 3 => cell.setNextState(!cell.getCurrentState)
+          case a if a == 3 => cell.setNextState(true)
           case _ => cell.setNextState(false)
         }
       }
